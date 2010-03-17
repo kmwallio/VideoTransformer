@@ -11,6 +11,7 @@ $window->signal_connect('delete-event' => sub{ Gtk2->main_quit });
 $button = Gtk2::Button->new("Quit");
 $button->signal_connect('clicked' => sub{ Gtk2->main_quit });
 
+$window->add($button);
 $window->show_all;
 
 Gtk2->main;
