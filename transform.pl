@@ -15,18 +15,19 @@ my $pane = Gtk2::VBox->new();
 	# File choosers...
 	my $chooser = Gtk2::HBox->new();
 	
-	my $frm_open_dest = Gtk2::Frame->new('Gtk2::FileChooserButton');
-	
 	my $dest = Gtk2::VBox->new();
 	my $source = Gtk2::VBox->new();
 	
-	my $lbl_dest = Gtk2::Label->new('No Destination File');
-	my $lbl_source = Gtk2::Label->new('No Source File');
+	our $lbl_dest = Gtk2::Label->new('No Destination File');
+	our $lbl_source = Gtk2::Label->new('No Source File');
 	
-	my $open_dest = Gtk2::FileChooserButton('Select Destination Video', 'open');
-	$open_dest->set_filename("~/");
-	my $open_source = Gtk2::FileChooserButton('Select Source Video', 'open');
-	$open_source->set_filename("~/");
+	our $source_file = "";
+	our $dest_file = "";
+	
+	my $open_dest = Gtk2::Button('Select Destination Video');
+	$open_dest->signal_connect('clicked' => &choose_file('Select Destination Video','open','dest'));
+	my $open_source = Gtk2::Button('Select Source Video');
+	$open_source->signal_connect('clicked' => &choose_file('Select Source Video','open','source'));
 	
 	$dest->pack_start($lbl_dest, TRUE, FALSE, 0);
 	$dest->pack_end($open_dest, TRUE, FALSE, 0);
@@ -50,7 +51,54 @@ $pane->pack_end($menu_b, TRUE, FALSE, 0);
 
 # Compose and show the window.
 $window->add($pane);
-$window->show_all;
+$window->show_all();
 
-Gtk2->main;
-0;
+Gtk2->main();
+
+sub choose_file {
+	my ($prompt, $type, $where) = @_;
+	# Create a new file chooser dialog
+	my $file_chooser = Gtk2::FileChooserDialog->new(
+								$prompt,
+								undef,
+								$type,
+								'gtk-cencel' => 'cancel',
+								'gtk-ok' => 'ok'
+							);
+	# Only let movies be selected
+	$file_chooser->add_filter(&filter_movie());
+	
+	# Check if we get input
+	$filename = "";
+	if ('ok' eq $file_chooser->run()) {
+		$filename = $file_chooser->get_filename();
+	}
+	
+	$file_chooser->destroy();
+	
+	if ($where eq 'source'){
+		$source_file = $filename;
+		if ($source_file =~ m/\/(.*?)\./){
+			$lbl_source->set_text($1);
+		}else{
+			$lbl_source->set_text("No File Selected");
+		}
+	}else{
+		$dest_file = $filename;
+		if ($dest_file =~ m/\/(.*?)\./){
+			$lbl_dest->set_text($1);
+		}else{
+			$lbl_dest->set_text("No File Selected");
+		}
+	}
+	return;
+}
+
+sub filter_movie{
+	my $filter = Gtk2::FileFilter->new();
+	$filter->set_name("Videos");
+	$filter->add_mime_type("video/quicktime");
+	$filter->add_mime_type("video/mpeg");
+	$filter->add_mime_type("x-msvideo");
+	return $filter;
+}
