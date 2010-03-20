@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 
+use strict;
+use warnings;
 use Gtk2 '-init';
+use Glib qw/TRUE FALSE/;
 
 # Create our Window
 my $window = Gtk2::Window->new('toplevel');
