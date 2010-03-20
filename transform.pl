@@ -69,22 +69,22 @@ sub choose_file {
 	$file_chooser->add_filter(&filter_movie());
 	
 	# Check if we get input
-	$filename = "";
+	my $fname = "";
 	if ('ok' eq $file_chooser->run()) {
-		$filename = $file_chooser->get_filename();
+		$fname = $file_chooser->get_filename();
 	}
 	
 	$file_chooser->destroy();
 	
 	if ($where eq 'source'){
-		$source_file = $filename;
+		$source_file = $fname;
 		if ($source_file =~ m/\/(.*?)\./){
 			$lbl_source->set_text($1);
 		}else{
 			$lbl_source->set_text("No File Selected");
 		}
 	}else{
-		$dest_file = $filename;
+		$dest_file = $fname;
 		if ($dest_file =~ m/\/(.*?)\./){
 			$lbl_dest->set_text($1);
 		}else{
