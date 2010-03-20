@@ -11,6 +11,27 @@ $window->signal_connect('delete-event' => sub{ Gtk2->main_quit });
 my $pane = Gtk2::VBox->new();
 	
 	# File choosers...
+	my $chooser = Gtk2::HBox->new();
+	
+	my $frm_open_dest = Gtk2::Frame->new('Gtk2::FileChooserButton');
+	
+	my $dest = Gtk2::VBox->new();
+	my $source = Gtk2::VBox->new();
+	
+	my $lbl_dest = Gtk2::Label->new('No Destination File');
+	my $lbl_source = Gtk2::Label->new('No Source File');
+	
+	my $open_dest = Gtk2::FileChooserButton('Select Destination Video', 'open');
+	my $open_source = Gtk2::FileChooserButton('Select Source Video', 'open');
+	
+	$dest->pack_start($lbl_dest, TRUE, FALSE, 0);
+	$dest->pack_end($open_dest, TRUE, FALSE, 0);
+	
+	$source->pack_start($lbl_source, TRUE, FALSE, 0);
+	$source->pack_end($open_source, TRUE, FALSE, 0);
+	
+	$chooser->pack_start($dest, TRUE, FALSE, 0);
+	$chooser->pack_end($source, TRUE, FALSE, 0);
 	
 	# Bottom menu buttons
 	my $menu_b = Gtk2::HBox->new();
@@ -20,6 +41,7 @@ my $pane = Gtk2::VBox->new();
 	# Add our buttons
 	$menu_b->pack_start($quit_b, TRUE, TRUE, 0); 
 
+$pane->pack_start($chooser, TRUE, TRUE, 0);
 $pane->pack_end($menu_b, TRUE, FALSE, 0);
 
 # Compose and show the window.
