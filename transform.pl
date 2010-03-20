@@ -25,9 +25,9 @@ my $pane = Gtk2::VBox->new();
 	our $dest_file = "";
 	
 	my $open_dest = Gtk2::Button->new('Select Destination Video');
-	$open_dest->signal_connect('clicked' => choose_file('Select Destination Video','open','dest'));
+	$open_dest->signal_connect('clicked' => sub{ choose_file('Select Destination Video','open','dest') });
 	my $open_source = Gtk2::Button->new('Select Source Video');
-	$open_source->signal_connect('clicked' => choose_file('Select Source Video','open','source'));
+	$open_source->signal_connect('clicked' => sub {choose_file('Select Source Video','open','source') });
 	
 	$dest->pack_start($lbl_dest, TRUE, FALSE, 0);
 	$dest->pack_end($open_dest, TRUE, FALSE, 0);
