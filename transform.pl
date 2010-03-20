@@ -25,7 +25,9 @@ my $pane = Gtk2::VBox->new();
 	my $lbl_source = Gtk2::Label->new('No Source File');
 	
 	my $open_dest = Gtk2::FileChooserButton('Select Destination Video', 'open');
+	$open_dest->set_filename("~/");
 	my $open_source = Gtk2::FileChooserButton('Select Source Video', 'open');
+	$open_source->set_filename("~/");
 	
 	$dest->pack_start($lbl_dest, TRUE, FALSE, 0);
 	$dest->pack_end($open_dest, TRUE, FALSE, 0);
