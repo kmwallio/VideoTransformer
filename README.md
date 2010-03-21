@@ -24,13 +24,13 @@ Just download and run `perl transform.pl`
 
 Download and install [MacPorts](http://www.macports.org/ "Mac Ports").  Then run the following (it'll install more than needed, but yeah...).
 
-> sudo port install p5-gtk* 
-> sudo port install p5-math* 
-> sudo port install p5-gd* 
+> sudo port install p5-gtk*  
+> sudo port install p5-math*  
+> sudo port install p5-gd*
 
 For nicer themes:
 
-> sudo port install gtk-chtheme 
+> sudo port install gtk-chtheme  
 > sudo port install gtk2-aurora
 
 ### Linux
