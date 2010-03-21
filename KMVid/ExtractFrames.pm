@@ -14,6 +14,7 @@ sub new {
 		$title = $2 . "." . $3;
 	}
 	$window->set_title('Extracting: ' . $title);
+	$window->set_border_width(15);
 	my $self = {
 		_video => $video,
 		_dest => $dest,

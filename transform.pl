@@ -1,13 +1,16 @@
-#!/usr/bin/perl
+#!/opt/local/bin/perl
 
 use strict;
 use Gtk2 '-init';
 use Glib qw/TRUE FALSE/;
+use KMVid::Clicker;
+use KMVid::ExtractFrames;
 
 # Create our Window
 our $window = Gtk2::Window->new('toplevel');
 $window->set_title("Video Transfomer - Control Window");
 $window->signal_connect('delete-event' => sub{ Gtk2->main_quit });
+$window->set_border_width(15);
 
 our $working_vid = FALSE;
 
@@ -116,14 +119,34 @@ sub click_through {
 	if ($working_vid){
 		return already_working();
 	}
+	
+	if ($source_file eq "" || $dest_file eq ""){
+		return no_input();
+	}
+	
 	$working_vid = TRUE;
+	my $dest = new ExtractFrames($dest_file, "dest");
+	$dest->start();
+	my $source = new ExtractFrames($source_file, "source");
+	$source->start();
+	
+	$working_vid = FALSE;
+	return;
 }
 
 sub magic_through {
 	if ($working_vid){
 		return already_working();
 	}
+	
+	if ($source_file eq "" || $dest_file eq ""){
+		return no_input();
+	}
+	
 	$working_vid = TRUE;
+	
+	$working_vid = FALSE;
+	return;
 }
 
 sub already_working {
@@ -132,6 +155,17 @@ sub already_working {
 										'error',
 										'ok',
 										'Already processing the videos.');
+	$dialog->run();
+	$dialog->destroy();
+	return FALSE;
+}
+
+sub no_input {
+	my $dialog = Gtk2::MessageDialog->new ($window,
+										'modal',
+										'error',
+										'ok',
+										'Please choose both the source and destination videos.');
 	$dialog->run();
 	$dialog->destroy();
 	return FALSE;
