@@ -26,7 +26,11 @@ Download and install [MacPorts](http://www.macports.org/ "Mac Ports").  Then run
 
 > sudo port install p5-gtk*  
 > sudo port install p5-math*  
-> sudo port install p5-gd*
+> sudo port install p5-gd*  
+> sudo port install mplayer  
+> sudo port install ffmpeg
+
+if on Snow Leopard, use mplayer-devel.
 
 For nicer themes:
 
@@ -37,6 +41,10 @@ For nicer themes:
 
 Depending on your distro, install the GTK2-Perl package...  Debian, Fedora, Ubuntu, and etc make it easy.  Just search the repos.  Other wise, [this link](http://live.gnome.org/GTK2-Perl/FrequentlyAskedQuestions#Downloading.2C_Building.2C_Installing_Gtk2-Perl) should hopefully help...
 
+Also install the mplayer and ffmpeg binaries for your system.
+
 ### Windows
 
 [This link](http://live.gnome.org/GTK2-Perl/FrequentlyAskedQuestions#Downloading.2C_Building.2C_Installing_Gtk2-Perl) should help if using ActiveState or StrawberryPerl, alternatively, try [Camelbox](http://code.google.com/p/camelbox/ "Camelbox - Perl for Windows").
+
+This program might not work on Windows for a while though...
