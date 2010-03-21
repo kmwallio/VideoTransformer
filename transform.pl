@@ -82,25 +82,24 @@ sub choose_file {
 	my $fname = "";
 	if ('ok' eq $file_chooser->run()) {
 		$fname = $file_chooser->get_filename();
+		if ($where eq 'source'){
+			$source_file = $fname;
+			if ($source_file =~ m/\/(.*)\/(.*)\.(.*)/){
+				$lbl_source->set_text($2 . "." . $3);
+			}else{
+				$lbl_source->set_text("No File Selected");
+			}
+		}else{
+			$dest_file = $fname;
+			if ($dest_file =~ m/\/(.*)\/(.*)\.(.*)/){
+				$lbl_dest->set_text($2 . "." . $3);
+			}else{
+				$lbl_dest->set_text("No File Selected");
+			}
+		}
 	}
 	
 	$file_chooser->destroy();
-	
-	if ($where eq 'source'){
-		$source_file = $fname;
-		if ($source_file =~ m/\/(.*)\/(.*)\.(.*)/){
-			$lbl_source->set_text($2 . "." . $3);
-		}else{
-			$lbl_source->set_text("No File Selected");
-		}
-	}else{
-		$dest_file = $fname;
-		if ($dest_file =~ m/\/(.*)\/(.*)\.(.*)/){
-			$lbl_dest->set_text($2 . "." . $3);
-		}else{
-			$lbl_dest->set_text("No File Selected");
-		}
-	}
 	return;
 }
 
