@@ -74,7 +74,7 @@ sub start {
 			my $event = shift;
 			# If they clicked normally
 			if ($event->button == 1) {
-				print join ' ', $event->coords,"\n";
+				#print join ' ', $event->coords,"\n";
 				my ($x, $y) = $event->coords;
 				$self->log($x, $y);
 			}
