@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 use Gtk2 '-init';
 use Glib qw/TRUE FALSE/;
 use KMVid::Clicker;
@@ -30,13 +32,10 @@ sub work_magic {
 	close(CLICKR);
 	$current = 0;
 	foreach(@frames){
-		print $_ . "\n";
 		$current = $current + 1;
 		if($_ =~ m/(jpeg|jpg)/){
-			print " is an Image.";
 			my $s_frame = './temp/source/' . $_;
 			if(-e $s_frame && @clicks != 0){
-				print " has Clicks.\n";
 				$pBar->set_fraction($current / scalar(@frames));
 				$pBar->set_text(($current - 2) . ' of ' . (scalar(@frames) - 2));
 				while (Gtk2->events_pending) {
@@ -56,7 +55,6 @@ sub work_magic {
 }
 
 sub transform {
-	print "Transform\n";
 	my $dest = shift;
 	my $source = shift;
 	my $out = shift;
@@ -155,7 +153,6 @@ sub transform {
 	$dest_img->Write($out);
 	$dest_img = undef;
 	$source_img = undef;
-	print "End Transform\n";
 }
 
 Gtk2->main();
