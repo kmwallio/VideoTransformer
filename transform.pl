@@ -334,7 +334,15 @@ sub transform {
 		[($d * $h) - ($e * $g), ($b * $g) - ($a * $h), ($a * $e) - ($b * $d)]
 		]);
 	my @nColor = (-1, -1, -1);
-	my @oColor = (-1, -1, -1);
+	my @nColor1 = (-1, -1, -1);
+	my @nColor2 = (-1, -1, -1);
+	my @nColor3 = (-1, -1, -1);
+	my @pColor = (-1, -1, -1);
+	my $lX = 0;
+	my $uX = 0;
+	my $lY = 0;
+	my $uY = 0;
+	#my @oColor = (-1, -1, -1);
 	for($nX = 0; $nX < $nwidth; $nX++){
 		for($nY = 0; $nY < $nheight; $nY++){
 			my $ohYeah = PDL::Matrix->pdl([[$nX], [$nY], [1]]);
@@ -342,9 +350,30 @@ sub transform {
 			$oX = $oX / $oW;
 			$oY = $oY / $oW;
 			if(int($oX) >= 0 && int($oX) < $width && int($oY) >= 0 && int($oY) < $height){
-				@nColor = $source_img->GetPixel(channel => 'RGB', x => int($oX), y => int($oY));
-				@oColor = $dest_img->GetPixel(x => $nX, y => $nY);
-				$dest_img->SetPixel(x => $nX, y => $nY, color => \@nColor);
+				@pColor = $source_img->GetPixel(channel => 'RGB', x => int($oX), y => int($oY));
+				if($nwidth > $width && $nheight > $height){
+					eval {
+						$lY = int($oY);
+						$uY = int($oY + 1);
+						$uX = int($oX + 1);
+						$lX = int($oX);
+						if($uX < $width && $uY < $height){
+							$fOne = (1 / (($uX - $lX) * ($uY - $lY))) * ($uX - $oX) * ($uY - $lY);
+							$fTwo = (1 / (($uX - $lX) * ($uY - $lY))) * ($oX - $uX) * ($uY - $oY);
+							$fTre = (1 / (($uX - $lX) * ($uY - $lY))) * ($uX - $oX) * ($oY - $lY);
+							$fFor = (1 / (($uX - $lX) * ($uY - $lY))) * ($oX - $lX) * ($oY - $lY);
+							@nColor = $source_img->GetPixel(channel => 'RGB', x => int($oX), y => int($oY));
+							@nColor1 = $source_img->GetPixel(channel => 'RGB', x => int($oX + 1), y => int($oY));
+							@nColor2 = $source_img->GetPixel(channel => 'RGB', x => int($oX), y => int($oY + 1));
+							@nColor3 = $source_img->GetPixel(channel => 'RGB', x => int($oX + 1), y => int($oY + 1));
+							$pColor[0] = ($nColor[0] * $fOne) + ($nColor1[0] * $fTwo) + ($nColor2[0] * $fTre) + ($nColor3[0] * $fFor);
+							$pColor[1] = ($nColor[1] * $fOne) + ($nColor1[1] * $fTwo) + ($nColor2[1] * $fTre) + ($nColor3[1] * $fFor);
+							$pColor[2] = ($nColor[2] * $fOne) + ($nColor1[2] * $fTwo) + ($nColor2[2] * $fTre) + ($nColor3[2] * $fFor);
+						}
+					};
+				}
+				#@oColor = $dest_img->GetPixel(x => $nX, y => $nY);
+				$dest_img->SetPixel(x => $nX, y => $nY, color => \@pColor);
 			}
 			$ohYeah = undef;
 			while (Gtk2->events_pending) {
