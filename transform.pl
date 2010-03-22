@@ -16,7 +16,7 @@ our $window = Gtk2::Window->new('toplevel');
 $window->set_title("Video Transfomer - Control Window");
 $window->signal_connect('delete-event' => sub{ Gtk2->main_quit });
 $window->set_border_width(15);
-
+my $magic_window = Gtk2::Window->new('toplevel');
 $magic_window->set_title('Processing Frames:');
 my $mpBar = Gtk2::ProgressBar->new();
 $magic_window->signal_connect('delete-event' => sub{ $magic_window->hide_all() });
@@ -238,6 +238,7 @@ sub work_magic {
 	close(CLICKR);
 	my $current = 0;
 	foreach(@frames){
+		$current = $current + 1;
 		if($_ =~ m/(jpeg|jpg)/){
 			$mpBar->set_fraction($current / scalar(@frames));
 			$mpBar->set_text(($current - 2) . ' of ' . (scalar(@frames) - 2));
