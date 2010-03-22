@@ -1,10 +1,11 @@
 #!/opt/local/bin/perl
 
-use strict;
+#use strict;
 use Gtk2 '-init';
 use Glib qw/TRUE FALSE/;
 use KMVid::Clicker;
 use KMVid::ExtractFrames;
+use GD;
 
 # Create our Window
 our $window = Gtk2::Window->new('toplevel');
@@ -28,6 +29,8 @@ my $pane = Gtk2::VBox->new();
 	
 	our $source_file = "";
 	our $dest_file = "";
+	our @frames;
+	our $cur_frame = 0;
 	
 	my $open_dest = Gtk2::Button->new('Select Destination Video');
 	$open_dest->signal_connect('clicked' => sub{ choose_file('Select Destination Video','open','dest') });
@@ -130,8 +133,43 @@ sub click_through {
 	my $source = new ExtractFrames($source_file, "source");
 	$source->start();
 	
+	opendir(DIR, "./temp/dest");
+	@frames = readdir(DIR);
+	closedir(DIR);
+	
+	open(CLICKS, "> ./temp/clicks.log");
+	print CLICKS "";
+	close(CLICKS);
+	
+	while($frames[$cur_frame] !~ m/(jpeg|jpg)/){
+		$cur_frame = $cur_frame + 1;
+	}
+	$cur_frame = $cur_frame - 1;
+	next_frame();
+	
+	#foreach(@frames){
+	#	print $_ . "\n";
+	#	if($_ =~ m/(jpeg|jpg)/){
+	#		print "./temp/dest/" . $_ . "\n";
+	#		my $cl = new Clicker("./temp/dest/" . $_);
+	#		$cl->start();
+	#		while($cl->working()){
+	#			sleep(1);
+	#		}
+	#		$cl = undef;
+	#	}
+	#}
+	
 	$working_vid = FALSE;
 	return;
+}
+
+sub next_frame {
+	$cur_frame = $cur_frame + 1;
+	print $frames[$cur_frame] ."\n";
+	my $cl = new Clicker("./temp/dest/" . $frames[$cur_frame], \&next_frame);
+	$cl->start();
+	$cl = undef;
 }
 
 sub magic_through {
@@ -169,4 +207,18 @@ sub no_input {
 	$dialog->run();
 	$dialog->destroy();
 	return FALSE;
+}
+
+sub transform {
+	my $dest = shift;
+	my $source = shift;
+	my $out = shift;
+	my $coords = shift;
+	
+	my $dest_img = GD::Image->newFromJpeg($dest);
+	my $source_img = GD::Image->newFromJpeg($source);
+	
+	open(OUTFILE, ">" . $out);
+	print OUTFILE $image->jpeg(100);
+	close(OUTFILE);
 }
