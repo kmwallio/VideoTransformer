@@ -8,7 +8,11 @@ package Clicker;
 sub new {
 	my ($class, $image, $parent) = @_;
 	my $window = Gtk2::Window->new('toplevel');
-	$window->set_title('Mapping');
+	my $t2 = "Image";
+	if($image =~ m/(.*?)\/(.*?).(jpeg|jpg)/){
+		$t2 = $2;
+	}
+	$window->set_title('Mapping: ' . $t2);
 	$window->set_resizable(FALSE);
 	$window->set_position('center');
 	# Basic stuff...
