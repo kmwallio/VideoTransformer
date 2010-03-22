@@ -259,6 +259,7 @@ sub work_magic {
 	}
 	Gtk2::Gdk->flush;
 	sleep(1);
+	make_movie();
 }
 
 sub transform {
@@ -360,4 +361,18 @@ sub transform {
 	$dest_img->Write($out);
 	$dest_img = undef;
 	$source_img = undef;
+}
+
+sub make_movie {
+	$mpBar->set_fraction(1);
+	$mpBar->set_text("Making Movie.  Window will close magically.");
+	while (Gtk2->events_pending) {
+		Gtk2->main_iteration;
+	}
+	Gtk2::Gdk->flush;
+	$make_m = `mencoder "mf://./temp/output/*.jpg" -mf fps=15 -ovc lavc -lavcopts vcodec=mpeg4 -o video.mpeg`;
+	$convert = `ffmpeg -i video.mpeg -f mp4 video.mp4`;
+	$mpBar->set_text("Done... video.mp4 is the result.");
+	sleep(15);
+	$magic_window->hide_all();
 }
