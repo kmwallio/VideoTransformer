@@ -1,4 +1,4 @@
-#!/opt/local/bin/perl
+#!/usr/bin/perl
 
 #use strict;
 use Gtk2 '-init';
@@ -236,6 +236,7 @@ sub work_magic {
 		push(@clicks, $_);
 	}
 	close(CLICKR);
+	my $current = 0;
 	foreach(@frames){
 		if($_ =~ m/(jpeg|jpg)/){
 			$mpBar->set_fraction($current / scalar(@frames));
@@ -250,6 +251,13 @@ sub work_magic {
 			}
 		}
 	}
+	$mpBar->set_fraction(1);
+	$mpBar->set_text("Finished all clicked images.");
+	while (Gtk2->events_pending) {
+		Gtk2->main_iteration;
+	}
+	Gtk2::Gdk->flush;
+	sleep(1);
 }
 
 sub transform {
