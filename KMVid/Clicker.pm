@@ -9,7 +9,7 @@ sub new {
 	my ($class, $image, $parent) = @_;
 	my $window = Gtk2::Window->new('toplevel');
 	my $t2 = "Image";
-	if($image =~ m/(.*?)\/(.*?).(jpeg|jpg)/){
+	if($image =~ m/\/(.*)\/(.*?).(jpeg|jpg)/){
 		$t2 = $2;
 	}
 	$window->set_title('Mapping: ' . $t2);
