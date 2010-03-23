@@ -399,8 +399,8 @@ sub make_movie {
 		Gtk2->main_iteration;
 	}
 	Gtk2::Gdk->flush;
-	$make_m = `mencoder "mf://./temp/output/*.jpg" -mf fps=15 -ovc lavc -lavcopts vcodec=mpeg4 -o video.mpeg`;
-	$convert = `ffmpeg -i video.mpeg -f mp4 video.mp4`;
+	$make_m = `mencoder "mf://./temp/output/*.jpg" -mf fps=15 -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=1500 -o video.mpeg`;
+	$convert = `ffmpeg -i video.mpeg -b 1500k -r 15 -f mp4 -y video.mp4`;
 	$mpBar->set_text("Done... video.mp4 is the result.");
 	sleep(15);
 	$magic_window->hide_all();
