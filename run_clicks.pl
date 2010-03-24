@@ -11,6 +11,9 @@ use PDL::Matrix;
 use PDL::MatrixOps;
 use Gtk2 '-init';
 use Glib qw/TRUE FALSE/;
+use POSIX qw/ceil/;
+
+print ceil(2.4) . "\n";
 
 my $window = Gtk2::Window->new('toplevel');
 $window->set_title('Running Clicks:');
@@ -146,27 +149,27 @@ sub transform {
 			$oY = $oY / $oW;
 			if(int($oX) >= 0 && int($oX) < $width && int($oY) >= 0 && int($oY) < $height){
 				@pColor = $source_img->GetPixel(channel => 'RGB', x => int($oX), y => int($oY));
-				if($nwidth > $width && $nheight > $height){
+				#if($nwidth > $width && $nheight > $height){
 					eval {
 						$lY = int($oY);
-						$uY = int($oY + 1);
-						$uX = int($oX + 1);
+						$uY = ceil($oY);
+						$uX = ceil($oX);
 						$lX = int($oX);
-						if($uX < $width && $uY < $height){
-							$fOne = (1 / (($uX - $lX) * ($uY - $lY))) * ($uX - $oX) * ($uY - $lY);
-							$fTwo = (1 / (($uX - $lX) * ($uY - $lY))) * ($oX - $uX) * ($uY - $oY);
+						if($uX != $lX && $uY != $lY){
+							$fOne = (1 / (($uX - $lX) * ($uY - $lY))) * ($uX - $oX) * ($uY - $oY);
+							$fTwo = (1 / (($uX - $lX) * ($uY - $lY))) * ($oX - $lX) * ($uY - $oY);
 							$fTre = (1 / (($uX - $lX) * ($uY - $lY))) * ($uX - $oX) * ($oY - $lY);
 							$fFor = (1 / (($uX - $lX) * ($uY - $lY))) * ($oX - $lX) * ($oY - $lY);
-							@nColor = $source_img->GetPixel(channel => 'RGB', x => int($oX), y => int($oY));
-							@nColor1 = $source_img->GetPixel(channel => 'RGB', x => int($oX + 1), y => int($oY));
-							@nColor2 = $source_img->GetPixel(channel => 'RGB', x => int($oX), y => int($oY + 1));
-							@nColor3 = $source_img->GetPixel(channel => 'RGB', x => int($oX + 1), y => int($oY + 1));
+							@nColor = $source_img->GetPixel(channel => 'RGB', x => $lX, y => $lY);
+							@nColor1 = $source_img->GetPixel(channel => 'RGB', x => $uX, y => $lY);
+							@nColor2 = $source_img->GetPixel(channel => 'RGB', x => $lX, y => $uY);
+							@nColor3 = $source_img->GetPixel(channel => 'RGB', x => $uX, y => $uY);
 							$pColor[0] = ($nColor[0] * $fOne) + ($nColor1[0] * $fTwo) + ($nColor2[0] * $fTre) + ($nColor3[0] * $fFor);
 							$pColor[1] = ($nColor[1] * $fOne) + ($nColor1[1] * $fTwo) + ($nColor2[1] * $fTre) + ($nColor3[1] * $fFor);
 							$pColor[2] = ($nColor[2] * $fOne) + ($nColor1[2] * $fTwo) + ($nColor2[2] * $fTre) + ($nColor3[2] * $fFor);
 						}
 					};
-				}
+				#}
 				#@oColor = $dest_img->GetPixel(x => $nX, y => $nY);
 				$dest_img->SetPixel(x => $nX, y => $nY, color => \@pColor);
 			}
